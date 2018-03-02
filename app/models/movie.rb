@@ -3,4 +3,8 @@ class Movie < ActiveRecord::Base
 def self.ratings
 return @@ratings
 end
-end       
+end
+
+
+
+   
