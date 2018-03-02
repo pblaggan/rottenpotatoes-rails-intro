@@ -11,8 +11,43 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
-  end
+    #@movies = Movie.all
+
+
+@all_ratings = Movie.ratings
+
+if (params[:ratings])
+@selected = params[:ratings].keys
+session[:ratings] = params[:ratings]
+elsif (session[:ratings])
+flag = 1
+@selected = session[:ratings].keys
+else
+@selected = @all_ratings
+end
+
+if (params[:sort])
+@sort_method = params[:sort]
+session[:sort] = params[:sort]
+elsif (session[:sort])
+flag = 1
+@sort_method = session[:sort]
+else
+@sort_method = nil
+end
+
+if params[:sort]=="title"
+	@title_header="hilite"
+   elsif params[:sort]=="release_date"
+	@release_date_header="hilite"
+end
+
+if flag == 1
+redirect_to movies_path(:ratings => session[:ratings], :sort => session[:sort])
+end
+@movies = Movie.where(:rating => @selected).order(@sort_method)
+end
+
 
   def new
     # default: render 'new' template
